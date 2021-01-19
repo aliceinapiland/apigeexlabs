@@ -1,0 +1,19 @@
+imports:
+  - path: qwiklabs.jinja
+resources:
+  - name: qwiklabs
+    type: qwiklabs.jinja
+    properties:
+      childProject: '{{CHILD_PROJECT}}'
+      childProjectSvcAccountJSON: '{{CHILD_PROJECT_SVC_ACCOUNT_JSON}}'
+      childProjectRegion: '{{CHILD_PROJECT_REGION}}'
+      childProjectZone: '{{CHILD_PROJECT_ZONE}}'
+      childProjectUsername: '{{CHILD_PROJECT_USERNAME}}'
+      parentProject: '{{PARENT_PROJECT}}'
+      parentProjectGithubOrg: '{{PARENT_PROJECT_GITHUB_ORG}}'
+      parentProjectGithubRepo: '{{PARENT_PROJECT_GITHUB_REPO}}'
+      parentProjectGithubBranch: '{{PARENT_PROJECT_GITHUB_BRANCH}}'
+      parentProjectDNSZone: '{{PARENT_PROJECT_DNS_ZONE}}'
+      parentProjectSvcAccountPass: '{{PARENT_PROJECT_SVC_ACCOUNT_PASS}}'
+      parentProjectLabDirName: '{{PARENT_PROJECT_LAB_DIR_NAME}}'
+      startupScriptUrl: '{{STARTUP_SCRIPT_URL}}'

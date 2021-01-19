@@ -1,0 +1,60 @@
+{% set childProject = env["project"] %}
+{% set childProjectZone = properties["childProjectZone"] or properties["zone"] %}
+{% set childProjectRegion = properties["childProjectRegion"]  or properties["region"] %}
+{% set childProjectUsername = properties["childProjectUsername"] or properties["userName"] %}
+{% set childProjectSvcAccountJSON = properties["childProjectSvcAccountJSON"] or properties["keyFile"] %}
+{% set parentProject = properties["parentProject"] %}
+{% set parentProjectDNSZone = properties["parentProjectDNSZone"] %}
+{% set parentProjectSvcAccountPass = properties["parentProjectSvcAccountPass"] %}
+{% set parentProjectGithubOrg = properties["parentProjectGithubOrg"] %}
+{% set parentProjectGithubRepo = properties["parentProjectGithubRepo"] %}
+{% set parentProjectGithubBranch = properties["parentProjectGithubBranch"] %}
+{% set parentProjectLabDirName = properties["parentProjectLabDirName"] %}
+{% set startupScriptUrl = "https://raw.githubusercontent.com/" ~ parentProjectGithubOrg ~ "/" ~ parentProjectGithubRepo ~ "/" ~ parentProjectGithubBranch ~ "/deployment-manager/bin/bootstrap.sh?" ~ env["current_time"]  %}
+
+resources:
+- type: compute.v1.instance
+  name: lab-startup
+  properties:
+    zone: '{{ childProjectZone }}'
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ childProject }}/zones/{{ childProjectZone }}/machineTypes/n1-standard-4
+    metadata:
+      items:
+        - key: childProject
+          value: '{{ childProject }}'
+        - key: childProjectSvcAccountJSON
+          value: '{{ childProjectSvcAccountJSON }}'
+        - key: childProjectUsername
+          value: '{{ childProjectUsername }}'
+        - key: childProjectZone
+          value: '{{ childProjectZone }}'
+        - key: childProjectRegion
+          value: '{{ childProjectRegion }}'
+        - key: parentProject
+          value: '{{ parentProject }}'
+        - key: parentProjectDNSZone
+          value: '{{ parentProjectDNSZone }}'
+        - key: parentProjectSvcAccountPass
+          value: '{{ parentProjectSvcAccountPass }}'
+        - key: parentProjectGithubOrg
+          value: '{{ parentProjectGithubOrg }}'
+        - key: parentProjectGithubRepo
+          value: '{{ parentProjectGithubRepo }}'
+        - key: parentProjectGithubBranch
+          value: '{{ parentProjectGithubBranch }}'
+        - key: parentProjectLabDirName
+          value: '{{ parentProjectLabDirName }}'
+        - key: startup-script-url
+          value: '{{ startupScriptUrl }}'
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
